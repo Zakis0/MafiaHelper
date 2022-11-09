@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Mafia Helper</string>
+    <string name="Citizen">Citizen</string>
+    <string name="Mafia">Mafia</string>
+    <string name="Detective">Detective</string>
+    <string name="Doctor">Doctor</string>
+    <string name="Maniac">Maniac</string>
+    <string name="Hooker">Hooker</string>
+    <string name="addPlayer">Add player</string>
+    <string name="delPlayer">Delete Player</string>
+    <string name="done">Done</string>
+</resources>
