@@ -1,10 +1,12 @@
 package com.example.mafiahelper.adapters
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mafiahelper.LOG
 import com.example.mafiahelper.Player
 import com.example.mafiahelper.R
 import com.example.mafiahelper.databinding.PlayerItemBinding
@@ -13,13 +15,13 @@ class PlayerAdapter(val listener: Listener): RecyclerView.Adapter<PlayerAdapter.
     val playerList = ArrayList<Player>()
     class PlayerHolder(item: View): RecyclerView.ViewHolder(item) {
         val bindingClass = PlayerItemBinding.bind(item)
+
         fun bind(player: Player, listener: Listener, position: Int) = with(bindingClass) {
             roleImg.setImageResource(player.role.img)
             roleName.text = player.role.name.string
             playerName.text = player.name
-
             itemView.setOnClickListener {
-                listener.onClick(position)
+                listener.onClickPlayer(position)
             }
         }
     }
@@ -56,6 +58,6 @@ class PlayerAdapter(val listener: Listener): RecyclerView.Adapter<PlayerAdapter.
     }
 
     interface Listener {
-        fun onClick(position: Int)
+        fun onClickPlayer(position: Int)
     }
 }

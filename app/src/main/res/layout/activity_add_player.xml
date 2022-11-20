@@ -17,14 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:background="@color/grey"
-            app:cardBackgroundColor="@color/grey">
+            android:background="@color/bcgColor"
+            app:cardBackgroundColor="@color/bcgColor"
+            app:cardCornerRadius="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="20dp"
-                android:background="@color/grey"
+                android:background="@color/bcgColor"
                 android:orientation="vertical">
 
                 <EditText
@@ -37,7 +38,7 @@
                     android:hint="Player name"
                     android:inputType="textPersonName"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/black"
+                    android:textColorHint="@color/hintColor"
                     android:textSize="24sp" />
 
                 <androidx.cardview.widget.CardView
@@ -49,6 +50,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/cardViewColor"
                     app:cardCornerRadius="10dp"
                     app:cardPreventCornerOverlap="true"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -76,6 +78,7 @@
                             android:layout_marginTop="5dp"
                             android:gravity="center"
                             android:text="TextView"
+                            android:textColor="@color/white"
                             android:textSize="24sp" />
 
                     </LinearLayout>
@@ -85,7 +88,7 @@
                     android:id="@+id/playerRolesGridView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="100dp"
+                    android:layout_marginBottom="30dp"
                     android:layout_weight="0"
                     android:columnWidth="150dp"
                     android:horizontalSpacing="15dp"
@@ -109,7 +112,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/addPlayerBtn"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
@@ -117,7 +120,10 @@
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="24dp"
                     android:layout_weight="0"
-                    android:text="@string/addPlayer" />
+                    android:backgroundTint="@color/btnColor"
+                    android:text="@string/addPlayer"
+                    android:textColor="@color/btnTextColor"
+                    app:cornerRadius="20dp" />
 
             </LinearLayout>
 

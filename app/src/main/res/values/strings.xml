@@ -1,12 +1,26 @@
 <resources>
     <string name="app_name">Mafia Helper</string>
-    <string name="Citizen">Citizen</string>
-    <string name="Mafia">Mafia</string>
-    <string name="Detective">Detective</string>
-    <string name="Doctor">Doctor</string>
-    <string name="Maniac">Maniac</string>
-    <string name="Hooker">Hooker</string>
     <string name="addPlayer">Add player</string>
     <string name="delPlayer">Delete Player</string>
     <string name="done">Done</string>
+    <string name="players">Players</string>
+    <string name="night">Night</string>
+    <string name="timer">Timer</string>
+    <string name="random">Random</string>
+    <string name="startRange">Start range</string>
+    <string name="endRange">End range</string>
+    <string name="generate">Generate</string>
+    <string name="clear">Clear</string>
+    <string name="startTimer">Start timer</string>
+    <string name="addTimer">Add timer</string>
+    <string name="delTimer">Delete timer</string>
+    <string name="stopTimer">Stop timer</string>
+    <string name="pauseTimer">Pause timer</string>
+    <string name="unpauseTimer">Unpause timer</string>
+    <string name="timerHint">Time</string>
+    <string name="timerStartText">00:00</string>
+    <string name="timerExampleText">
+        Timer sample: 12:02
+        \nMax timer: 59:59
+    </string>
 </resources>

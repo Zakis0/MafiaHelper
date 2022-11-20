@@ -3,33 +3,26 @@ package com.example.mafiahelper
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import com.example.mafiahelper.adapters.RoleAdapters
-import com.example.mafiahelper.databinding.ActivityEditBinding
-import com.example.mafiahelper.databinding.ActivityEditPlayerBinding
+import com.example.mafiahelper.databinding.ActivityAddPlayerBinding
 import com.example.mafiahelper.model.RoleItem
-import com.example.mafiahelper.roles.*
+import com.example.mafiahelper.roles.Role
 
-class EditPlayer : AppCompatActivity(), AdapterView.OnItemClickListener {
-    private lateinit var bindingClass: ActivityEditPlayerBinding
+class AddPlayerActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
+    private lateinit var bindingClass: ActivityAddPlayerBinding
 
     private var roleList: ArrayList<RoleItem>? = null
     private var roleAdapters: RoleAdapters? = null
 
-    private lateinit var playerRole: Role
-    private var position: Int = 0
+    private var playerRole: Role = DEFAULT_ROLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindingClass = ActivityEditPlayerBinding.inflate(layoutInflater)
+        bindingClass = ActivityAddPlayerBinding.inflate(layoutInflater)
         setContentView(bindingClass.root)
         initButtons()
-
-        val player = intent.getSerializableExtra(EDIT_PLAYER) as Player
-        position = intent.getSerializableExtra(EDIT_POSITION) as Int
 
         roleList = ArrayList()
         roleList = setDataList()
@@ -37,10 +30,8 @@ class EditPlayer : AppCompatActivity(), AdapterView.OnItemClickListener {
         bindingClass.playerRolesGridView.adapter = roleAdapters
         bindingClass.playerRolesGridView.onItemClickListener = this
 
-        bindingClass.playerName.setText(player.name)
-        bindingClass.roleImg.setImageResource(player.role.img)
-        bindingClass.roleName.text = player.role.name.string
-        playerRole = player.role
+        bindingClass.roleImg.setImageResource(DEFAULT_ROLE.img)
+        bindingClass.roleName.text = DEFAULT_ROLE.name.string
 
         bindingClass.roleCardView.setOnClickListener {
             bindingClass.playerRolesGridView.visibility = View.VISIBLE
@@ -49,21 +40,12 @@ class EditPlayer : AppCompatActivity(), AdapterView.OnItemClickListener {
         }
         bindingClass.playerRolesGridView.visibility = View.GONE
     }
+
     private fun initButtons() = with(bindingClass) {
-        doneBtn.setOnClickListener {
+        addPlayerBtn.setOnClickListener {
             val player = Player(playerName.text.toString(), playerRole)
-            val editIntent = Intent().apply {
-                putExtra(EDIT_PLAYER, player)
-                putExtra(EDIT_POSITION, position)
-            }
+            val editIntent = Intent().putExtra(CREATE, player)
             setResult(RESULT_OK, editIntent)
-            finish()
-        }
-        delPlayerBtn.setOnClickListener {
-            val editIntent = Intent().apply {
-                putExtra(DELETE, position)
-            }
-            setResult(RESULT_DELETE, editIntent)
             finish()
         }
     }
@@ -77,7 +59,7 @@ class EditPlayer : AppCompatActivity(), AdapterView.OnItemClickListener {
     }
 
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-        val items: RoleItem = roleList!!.get(position)
+        val items: RoleItem = roleList!![position]
 
         playerRole = getRole(items.role)
 
@@ -88,6 +70,7 @@ class EditPlayer : AppCompatActivity(), AdapterView.OnItemClickListener {
         bindingClass.roleCardView.visibility = View.VISIBLE
         changeBtnVisibility()
     }
+
     fun changeBtnVisibility() {
         if (bindingClass.btnsCardView.visibility == View.VISIBLE) {
             bindingClass.btnsCardView.visibility = View.GONE

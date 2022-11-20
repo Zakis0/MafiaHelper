@@ -13,14 +13,28 @@
         android:theme="@style/Theme.MafiaHelper"
         tools:targetApi="31">
         <activity
-            android:name=".EditPlayer"
+            android:name=".EditPlayerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".EditActivity"
+            android:name=".AddPlayerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".EditTimerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".AddTimerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

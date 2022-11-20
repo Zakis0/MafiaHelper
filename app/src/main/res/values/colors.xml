@@ -7,5 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="grey">#2A2A2A</color>
+    <color name="bcgColor">#2A2A2A</color>
+    <color name="hintColor">#9E9797</color>
+    <color name="cardViewColor">#605D5D</color>
+    <color name="btnColor">#2A2A2A</color>
+    <color name="btnTextColor">#FFFFFF</color>
 </resources>
