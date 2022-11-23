@@ -1,6 +1,9 @@
 package com.example.mafiahelper
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -9,12 +12,17 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.ColorInt
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.mafiahelper.DB.TimerDbItem
+import com.example.mafiahelper.DB.MainDb
 import com.example.mafiahelper.adapters.PlayerAdapter
 import com.example.mafiahelper.adapters.TimerAdapter
 import com.example.mafiahelper.databinding.ActivityMainBinding
-import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity(), PlayerAdapter.Listener, TimerAdapter.Listener {
     private lateinit var bindingClass: ActivityMainBinding
@@ -45,11 +53,21 @@ class MainActivity : AppCompatActivity(), PlayerAdapter.Listener, TimerAdapter.L
 
         activeMode = bindingClass.playersMode
 
-        for (timer in BASE_TIMERS) {
-            timerList.add(timer)
-            adapterTimer.addTimer(timer)
+        val timersDb = MainDb.getDb(this)
+
+        var DbDataHasBeenAdded = false
+        if (!DbDataHasBeenAdded) {
+            var timer: Timer
+            timersDb.getDao().getAllItems().asLiveData().observe(this) { list ->
+                list.forEach {
+                    timer = Timer(it.minutes, it.seconds, it.id)
+                    timerList.add(timer)
+                    adapterTimer.addTimer(timer)
+                }
+                DbDataHasBeenAdded = true
+            }
         }
-        
+
         createPlayerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 val player = it.data?.getSerializableExtra(CREATE) as Player
@@ -76,8 +94,21 @@ class MainActivity : AppCompatActivity(), PlayerAdapter.Listener, TimerAdapter.L
             createTimerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     val timer = it.data?.getSerializableExtra(CREATE) as Timer
+                    if (timerList.isNotEmpty()) {
+                        timer.dbID = timerList[timerList.size - 1].dbID?.plus(1)
+                    }
+                    else {
+                        timer.dbID = 1
+                    }
                     timerList.add(timer)
                     adapterTimer.addTimer(timer)
+                    val item = TimerDbItem(timer.dbID,
+                            timer.minutes,
+                            timer.seconds,
+                        )
+                    Thread {
+                        timersDb.getDao().insertItem(item)
+                    }.start()
                 }
                 changeActiveMode(timerMode)
             }
@@ -88,10 +119,18 @@ class MainActivity : AppCompatActivity(), PlayerAdapter.Listener, TimerAdapter.L
                     if (position != null && position != -1) {
                         timerList[position] = timer
                         adapterTimer.editTimer(position, timer)
+                        val dbPos = timer.dbID!!
+                        Thread {
+                            timersDb.getDao().updateItem(dbPos, timer.minutes, timer.seconds)
+                        }.start()
                     }
                 }
                 else if (it.resultCode == RESULT_DELETE) {
                     val position = it.data?.getSerializableExtra(DELETE) as Int
+                    val dbPos = timerList[position].dbID!!
+                    Thread {
+                        timersDb.getDao().deleteItem(dbPos)
+                    }.start()
                     timerList.removeAt(position)
                     adapterTimer.delTimer(position)
                 }
@@ -127,6 +166,9 @@ class MainActivity : AppCompatActivity(), PlayerAdapter.Listener, TimerAdapter.L
                     R.id.night -> {
                         changeActiveMode(nightMode)
                     }
+                    R.id.vote -> {
+                        changeActiveMode(voteMode)
+                    }
                     R.id.timer -> {
                         changeActiveMode(timerMode)
                         if (timerStarted) {
@@ -160,16 +202,35 @@ class MainActivity : AppCompatActivity(), PlayerAdapter.Listener, TimerAdapter.L
         }
     }
     override fun onClickPlayer(position: Int) {
-        editPlayerLauncher?.launch(Intent(this@MainActivity, EditPlayerActivity::class.java).apply {
-            putExtra(EDIT_PLAYER, playerList[position])
-            putExtra(EDIT_POSITION, position)
-        })
+        if (playerList[position].alive) {
+            editPlayerLauncher?.launch(
+                Intent(
+                    this@MainActivity,
+                    EditPlayerActivity::class.java
+                ).apply {
+                    putExtra(EDIT_PLAYER, playerList[position])
+                    putExtra(EDIT_POSITION, position)
+                })
+        }
+    }
+    override fun onLongClickPlayer(position: Int, cardView: CardView) {
+        playerList[position].alive = !playerList[position].alive
+        if (playerList[position].alive) {
+            cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.cardViewColor))
+        }
+        else {
+            cardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.deadPlayerBgcColor))
+        }
     }
     override fun onLongClickTimer(position: Int) {
-        editTimerLauncher?.launch(Intent(this@MainActivity, EditTimerActivity::class.java).apply {
-            putExtra(EDIT_TIMER, timerList[position])
-            putExtra(EDIT_POSITION, position)
-        })
+        editTimerLauncher?.launch(
+            Intent(
+                this@MainActivity,
+                EditTimerActivity::class.java
+            ).apply {
+                putExtra(EDIT_TIMER, timerList[position])
+                putExtra(EDIT_POSITION, position)
+            })
     }
     override fun onClickTimer(timer: Timer) {
         if (!timerStarted) {

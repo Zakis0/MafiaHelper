@@ -3,7 +3,7 @@ package com.example.mafiahelper
 import android.util.Log
 import java.io.Serializable
 
-class Timer(val minutes: Int, val seconds: Int): Serializable {
+class Timer(val minutes: Int, val seconds: Int, var dbID: Int? = null): Serializable {
     companion object {
         val nullTimer = Timer(-1, -1)
         val baseTimer = Timer(0, 0)

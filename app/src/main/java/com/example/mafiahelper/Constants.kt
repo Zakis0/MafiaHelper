@@ -15,6 +15,12 @@ const val PAUSE_TIMER = "Pause timer"
 const val UNPAUSE_TIMER = "Unpause timer"
 const val STOP_TIMER_HINT = "Stop timer"
 
+const val TIMERS_DB_NAME = "timersDb"
+const val TIMERS_DB_FILE = "timers.db"
+
+const val TIMER_DB_COLUMN_MINUTES = "Minutes"
+const val TIMER_DB_COLUMN_SECONDS = "Seconds"
+
 const val BASE_TIMER_TIME = "00:00"
 
 const val TIMER_INTERVAL = 1000

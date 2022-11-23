@@ -12,4 +12,5 @@
     <color name="cardViewColor">#605D5D</color>
     <color name="btnColor">#2A2A2A</color>
     <color name="btnTextColor">#FFFFFF</color>
+    <color name="deadPlayerBgcColor">#BF3535</color>
 </resources>

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mafiahelper.LOG
 import com.example.mafiahelper.Player
@@ -16,10 +17,15 @@ class PlayerAdapter(val listener: Listener): RecyclerView.Adapter<PlayerAdapter.
     class PlayerHolder(item: View): RecyclerView.ViewHolder(item) {
         val bindingClass = PlayerItemBinding.bind(item)
 
+        @SuppressLint("ResourceAsColor")
         fun bind(player: Player, listener: Listener, position: Int) = with(bindingClass) {
             roleImg.setImageResource(player.role.img)
             roleName.text = player.role.name.string
             playerName.text = player.name
+            itemView.setOnLongClickListener {
+                listener.onLongClickPlayer(position, bindingClass.playerCardView)
+                true
+            }
             itemView.setOnClickListener {
                 listener.onClickPlayer(position)
             }
@@ -59,5 +65,6 @@ class PlayerAdapter(val listener: Listener): RecyclerView.Adapter<PlayerAdapter.
 
     interface Listener {
         fun onClickPlayer(position: Int)
+        fun onLongClickPlayer(position: Int, cardView: CardView)
     }
 }

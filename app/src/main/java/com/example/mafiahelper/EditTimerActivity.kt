@@ -18,6 +18,7 @@ import com.example.mafiahelper.roles.Role
 class EditTimerActivity : AppCompatActivity() {
     private lateinit var bindingClass: ActivityEditTimerBinding
     private var position: Int = 0
+    private lateinit var receivedTimer: Timer
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,14 +27,15 @@ class EditTimerActivity : AppCompatActivity() {
         setContentView(bindingClass.root)
         initButtons()
 
-        val timer = intent.getSerializableExtra(EDIT_TIMER) as Timer
+        receivedTimer = intent.getSerializableExtra(EDIT_TIMER) as Timer
         position = intent.getSerializableExtra(EDIT_POSITION) as Int
 
-        bindingClass.timer.setText(timeNormalize(Timer(timer.minutes, timer.seconds)))
+        bindingClass.timer.setText(timeNormalize(Timer(receivedTimer.minutes, receivedTimer.seconds)))
     }
     private fun initButtons() {
         bindingClass.doneBtn.setOnClickListener {
             val timer = getTime(bindingClass.timer.text.toString())
+            timer.dbID = receivedTimer.dbID
             if (timer != Timer.nullTimer && isNormalTime(timer)) {
                 val editIntent = Intent().apply {
                     putExtra(EDIT_TIMER, timer)

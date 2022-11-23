@@ -9,8 +9,7 @@ class Player(val name: String, val role: Role): Serializable {
     val statuses: MutableList<Statuses> = mutableListOf()
 
     var numOfVotes = 0
-
-//    var haveVoted = false
+    var alive = true
 
     fun addActionEffect(eff: Actions) {
         actionEffects.add(eff)
@@ -42,26 +41,17 @@ class Player(val name: String, val role: Role): Serializable {
         }
         return result
     }
-//    fun vote(player: Player) {
-//        if (!haveVoted) {
-//            player.numOfVotes++
-//            haveVoted = true
-//        }
-//    }
+    fun vote(player: Player) {
+        player.numOfVotes++
+    }
     fun resetVotes() {
         numOfVotes = 0
-//        haveVoted = false
     }
 }
 
 fun Player.implementEffects() {
-    if (actionEffects.contains(Actions.ATTACK) &&
-        !actionEffects.contains(Actions.HEAL) && !actionEffects.contains(Actions.HOOK)) {
-        statuses.add(Statuses.DEAD)
-    }
-    else {
-        statuses.add(Statuses.ALIVE)
-    }
+    alive = !(actionEffects.contains(Actions.ATTACK) &&
+            !actionEffects.contains(Actions.HEAL) && !actionEffects.contains(Actions.HOOK))
     if (actionEffects.contains(Actions.HOOK)) {
         statuses.add(Statuses.SILENCE)
     }
